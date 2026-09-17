@@ -9,7 +9,7 @@ import {
 } from "./saveDataValidation";
 
 export const AKUUKAN_SAVE_DATA_STORAGE_KEY =
-  "mahjong-skill-game:akuukan-save-data";
+  "mahjong-skill-game-polish:akuukan-save-data";
 
 export interface AkuukanSaveDataStorage {
   getItem(key: string): string | null;

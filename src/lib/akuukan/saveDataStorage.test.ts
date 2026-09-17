@@ -94,6 +94,27 @@ function expectInitialLoadResult(
 }
 
 describe("亜空間麻雀のセーブデータ読み込み", () => {
+  it("旧版の進行状況を読み込まず、新版の保存でも旧版を上書きしない", () => {
+    const prototypeKey = "mahjong-skill-game:akuukan-save-data";
+    const prototypeData = JSON.stringify(createProgressedSaveData());
+    const values = new Map<string, string>([[prototypeKey, prototypeData]]);
+    const storage: AkuukanSaveDataStorage = {
+      getItem: key => values.get(key) ?? null,
+      setItem: (key, value) => { values.set(key, value); }
+    };
+
+    expectInitialLoadResult(loadAkuukanSaveData(storage), null);
+    const saveData = createInitialAkuukanSaveData();
+    expect(saveAkuukanSaveData(storage, saveData).succeeded).toBe(true);
+    expect(values.get(prototypeKey)).toBe(prototypeData);
+    expect(values.size).toBe(2);
+    expect(loadAkuukanSaveData(storage)).toEqual({
+      saveData,
+      source: "storage",
+      failureReason: null
+    });
+  });
+
   it("保存データがなければ独立した初期データを返す", () => {
     const storage =
       new MemorySaveDataStorage();
