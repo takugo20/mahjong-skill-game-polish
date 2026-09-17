@@ -1,6 +1,7 @@
 import { ENEMY_NAMES, EnemyPortrait } from "./enemy-art/EnemyPortrait";
 import { ENEMY_DESCRIPTIONS } from "./EnemyGuide";
 import { PLAYER_SKILL_CATALOG } from "./lib/akuukan/playerSkillCatalog";
+import { isSkillTestMode } from "./lib/akuukan/skillTestMode";
 import { unlockGameAudio } from "./lib/gameAudio";
 import { EnemyCatalog } from "./EnemyCatalog";
 import { SkillCatalog } from "./SkillCatalog";
@@ -179,6 +180,12 @@ export function AkuukanGame() {
       <header className="akuukan-lobby-header">
         <span className="lobby-eyebrow">AKUUKAN MAHJONG</span>
         <h1>亜空間麻雀</h1>
+        {isSkillTestMode() && (
+          <p className="skill-test-notice">
+            検証モード：全スキル最高レベル・全敵解放
+            <a href={import.meta.env.BASE_URL}>通常モードに戻る</a>
+          </p>
+        )}
         <div className="lobby-progress" aria-label="解放状況">
           <span>対戦相手 <b>{Object.values(loaded.saveData.enemyProgress.enemies).filter(e => e.isUnlocked).length}</b> / 16</span>
           <span>スキル <b>{PLAYER_SKILL_CATALOG.filter(s => loaded.saveData.playerSkillGrowth.skills[s.id].isUnlocked).length}</b> / 80</span>

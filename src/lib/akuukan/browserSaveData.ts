@@ -1,6 +1,7 @@
 import type {
   AkuukanSaveData
 } from "./saveData";
+import { createSkillTestSaveData, isSkillTestMode, SKILL_TEST_STORAGE_KEY } from "./skillTestMode";
 import {
   loadAkuukanSaveData,
   saveAkuukanSaveData
@@ -32,7 +33,14 @@ function getBrowserSaveDataStorage():
   }
 
   try {
-    return window.localStorage;
+    const storage = window.localStorage;
+    if (isSkillTestMode()) {
+      return {
+        getItem: () => storage.getItem(SKILL_TEST_STORAGE_KEY),
+        setItem: (_key, value) => storage.setItem(SKILL_TEST_STORAGE_KEY, value)
+      };
+    }
+    return storage;
   } catch {
     return UNAVAILABLE_BROWSER_STORAGE;
   }
@@ -40,9 +48,13 @@ function getBrowserSaveDataStorage():
 
 export function loadAkuukanSaveDataFromBrowser():
   AkuukanSaveDataLoadResult {
-  return loadAkuukanSaveData(
+  const result = loadAkuukanSaveData(
     getBrowserSaveDataStorage()
   );
+  if (isSkillTestMode() && result.source === "initial" && result.failureReason === null) {
+    return { ...result, saveData: createSkillTestSaveData() };
+  }
+  return result;
 }
 
 export function saveAkuukanSaveDataToBrowser(

@@ -8,6 +8,8 @@
   --aqua: #91d9ce;
   color-scheme: dark;
 }
+.skill-test-notice { color: #f0d593; font-size: 12px; line-height: 1.8; }
+.skill-test-notice a { display: inline-block; padding: 8px 12px; margin-left: 10px; color: #a3eee1; text-underline-offset: 3px; }
 body {
   background:
     radial-gradient(ellipse at 10% 5%, #24645455, transparent 45%),
